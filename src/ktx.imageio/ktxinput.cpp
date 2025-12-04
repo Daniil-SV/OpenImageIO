@@ -192,6 +192,17 @@ KtxInput::seek_subimage(int subimage, int miplevel)
         m_spec.channelnames = m_format.channel_order;
     }
 
+    const char* colorspace = nullptr;
+    if (m_format.colorspace == glColorspace::sRGB) {
+        colorspace = "srgb_rec709_scene";
+    } else {
+        colorspace = "lin_rec709_scene";
+    }
+
+    m_spec.set_colorspace(colorspace);
+    if (m_format.channel_order.empty())
+        m_spec.default_channel_names();
+
     ktx_size_t offset = 0;
     status = ktxTexture_GetImageOffset(m_tex, miplevel, 0, subimage, &offset);
     if (status != KTX_SUCCESS)

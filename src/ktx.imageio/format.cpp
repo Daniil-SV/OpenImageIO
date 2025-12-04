@@ -89,9 +89,7 @@ get_format_descriptor(ktx_uint32_t glFormat, ktx_uint32_t glInternalFormat)
         format.colorspace = Space::sRGB;
         break;
 
-    default: 
-        format.type = Type::UNKNOWN; 
-        break;
+    default: format.type = Type::UNKNOWN; break;
     }
 
     return format;
