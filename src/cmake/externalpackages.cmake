@@ -207,6 +207,8 @@ if (FFmpeg_FOUND OR FREETYPE_FOUND)
     endif ()
 endif()
 
+checked_find_package (KTX)
+
 
 # Qt -- used for iv
 option (USE_QT "Use Qt if found" ON)
