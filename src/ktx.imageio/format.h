@@ -13,7 +13,10 @@ namespace ktx {
 enum class glColorspace { Linear = 0, sRGB };
 
 struct glDataDescriptor {
+    bool compressed = false;
+
     int channels_count;
+
     glColorspace colorspace;
 
     ///< Data format of the channels.
