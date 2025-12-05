@@ -41,12 +41,14 @@ public:
         return m_miplevel;
     }
     bool seek_subimage(int subimage, int miplevel) override;
+    bool seek_subimage(int subimage, int face, int miplevel);
     bool read_native_scanline(int subimage, int miplevel, int y, int z,
                               void* data) override;
     bool read_native_tile(int subimage, int miplevel, int x, int y, int z,
                           void* data) override;
 
 private:
+    bool load_face_data(int subimage, int face, int miplevel);
     void load_format_descriptor();
 
 private:
@@ -63,8 +65,16 @@ private:
     // to read scanlines or tiles from
     uint8_t* m_data = nullptr;
 
+    // Current array (layer) image index
     int m_subimage = -1;
+
+    // Current face (tile) index for cubemap
+    int m_face = -1;
+
+    // Current level
     int m_miplevel = -1;
+
+    // Info about data format
     glDataDescriptor m_format;
 };
 
@@ -123,6 +133,7 @@ KtxInput::open(const std::string& name, ImageSpec& newspec)
     m_buffer.resize(data_size);
     ktxTexture_LoadImageData(m_tex, (ktx_uint8_t*)m_buffer.data(), data_size);
 
+    // Basically convert glFormat into a form understandable for OIIO
     load_format_descriptor();
     if (m_format.channels_count == 0 || m_format.type == TypeDesc::UNKNOWN)
         return false;
@@ -157,31 +168,34 @@ KtxInput::close()
 bool
 KtxInput::seek_subimage(int subimage, int miplevel)
 {
-    lock_guard lock(*this);
-    ktx_error_code_e status = KTX_SUCCESS;
+    return seek_subimage(subimage, 0, miplevel);
+}
 
-    if (subimage != 0)
-        return false;
+bool
+KtxInput::seek_subimage(int subimage, int face, int miplevel)
+{
+    lock_guard lock(*this);
 
     // early out
-    if (subimage == current_subimage() && miplevel == current_miplevel())
+    if (subimage == current_subimage() && face == m_face && miplevel == current_miplevel())
         return true;
+
+    // checking for proper sub image index
+    if (subimage >= m_tex->numLayers)
+        return false;
+
+    // checking for proper face index
+    if (face >= m_tex->numFaces)
+        return false;
 
     // checking for proper mip map level
     if (miplevel >= m_tex->numLevels)
         return false;
 
-    // checking for proper sub image index
-    if (subimage >= m_tex->numFaces)
-        return false;
-
     // Mip map width and height for KTX is calculated based on base dimension size value
     ktx_uint32_t w = std::max(1u, m_tex->baseWidth >> miplevel);
     ktx_uint32_t h = std::max(1u, m_tex->baseHeight >> miplevel);
-    ktx_uint32_t d = 0;
-    if (m_tex->baseDepth) {
-        d = std::max(1u, m_tex->baseDepth >> miplevel);
-    }
+    ktx_uint32_t d = std::max(1u, m_tex->baseDepth >> miplevel);
 
     if (m_tex->isCubemap || m_tex->isArray) {
         // TODO: Cubemaps
@@ -192,28 +206,35 @@ KtxInput::seek_subimage(int subimage, int miplevel)
         m_spec.channelnames = m_format.channel_order;
     }
 
-    const char* colorspace = nullptr;
-    if (m_format.colorspace == glColorspace::sRGB) {
-        colorspace = "srgb_rec709_scene";
+    // fill the imagespec
+    if (m_tex->isCubemap) {
+        m_spec.attribute("textureformat", "CubeFace Environment");
+    } else if (m_tex->numDimensions == 3) {
+        m_spec.attribute("textureformat", "Volume Texture");
     } else {
-        colorspace = "lin_rec709_scene";
+        m_spec.attribute("textureformat", "Plain Texture");
     }
 
-    m_spec.set_colorspace(colorspace);
+    m_spec.attribute("ktx:version", m_tex->classId == ktxTexture1_c ? 1 : 2);
+    m_spec.attribute("oiio:subimages", m_tex->numLayers);
+    m_spec.attribute("oiio:miplevels", m_tex->numLevels);
+
+    if (m_format.colorspace == glColorspace::sRGB) {
+        m_spec.set_colorspace("srgb_rec709_scene");
+    } else {
+        m_spec.set_colorspace("lin_rec709_scene");
+    }
+
+    // Setup default channel names if the format does not explicitly set them
     if (m_format.channel_order.empty())
         m_spec.default_channel_names();
 
-    ktx_size_t offset = 0;
-    status = ktxTexture_GetImageOffset(m_tex, miplevel, 0, subimage, &offset);
-    if (status != KTX_SUCCESS)
+    // Finally, load face data and setup data pointer to it
+    if (!load_face_data(subimage, face, miplevel))
         return false;
 
-    m_data = m_buffer.data() + offset;
-    if (m_format.compressed) {
-        // TODO: Implement decompress
-    }
-
     m_subimage = subimage;
+    m_face     = face;
     m_miplevel = miplevel;
     return true;
 }
@@ -240,15 +261,38 @@ KtxInput::read_native_scanline(int subimage, int miplevel, int y, int z,
 }
 
 bool
-KtxInput::read_native_tile(int subimage, int miplevel, int x, int y, int z,
+KtxInput::read_native_tile(int subimage, int miplevel, int face, int y, int z,
                            void* data)
 {
     // don't proceed if not a cube map - use scanlines then instead
     if (!m_tex->isCubemap)
         return false;
 
+    if (!seek_subimage(subimage, face, miplevel))
+        return false;
+
     // TODO: cubemaps
     return false;
+}
+
+bool
+KtxInput::load_face_data(int subimage, int face, int miplevel)
+{
+    ktx_error_code_e status = KTX_SUCCESS;
+
+    ktx_size_t offset = 0;
+    status = ktxTexture_GetImageOffset(m_tex, miplevel, subimage, face,
+                                       &offset);
+    if (status != KTX_SUCCESS)
+        return false;
+
+    m_data = m_buffer.data() + offset;
+    if (m_format.compressed) {
+        return false;
+        // TODO: Implement decompress
+    }
+
+    return true;
 }
 
 void
