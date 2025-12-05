@@ -177,7 +177,8 @@ KtxInput::seek_subimage(int subimage, int face, int miplevel)
     lock_guard lock(*this);
 
     // early out
-    if (subimage == current_subimage() && face == m_face && miplevel == current_miplevel())
+    if (subimage == current_subimage() && face == m_face
+        && miplevel == current_miplevel())
         return true;
 
     // checking for proper sub image index
@@ -198,8 +199,12 @@ KtxInput::seek_subimage(int subimage, int face, int miplevel)
     ktx_uint32_t d = std::max(1u, m_tex->baseDepth >> miplevel);
 
     if (m_tex->isCubemap || m_tex->isArray) {
-        // TODO: Cubemaps
-        return false;
+        m_spec = ImageSpec(w, h * m_tex->numFaces, m_format.channels_count,
+                           m_format.type);
+        m_spec.depth      = d;
+        m_spec.tile_width = m_spec.full_width = w;
+        m_spec.tile_height = m_spec.full_height = h;
+        m_spec.tile_depth = m_spec.full_depth = d;
     } else {
         m_spec       = ImageSpec(w, h, m_format.channels_count, m_format.type);
         m_spec.depth = d;
@@ -261,18 +266,23 @@ KtxInput::read_native_scanline(int subimage, int miplevel, int y, int z,
 }
 
 bool
-KtxInput::read_native_tile(int subimage, int miplevel, int face, int y, int z,
+KtxInput::read_native_tile(int subimage, int miplevel, int x, int y, int z,
                            void* data)
 {
     // don't proceed if not a cube map - use scanlines then instead
     if (!m_tex->isCubemap)
         return false;
 
-    if (!seek_subimage(subimage, face, miplevel))
+    // make sure we get the right dimensions
+    if (x % m_spec.tile_width || y % m_spec.tile_height
+        || z % m_spec.tile_width)
         return false;
 
-    // TODO: cubemaps
-    return false;
+    if (!seek_subimage(subimage, y / m_spec.tile_height, miplevel))
+        return false;
+
+    memcpy(data, m_data, m_spec.tile_bytes());
+    return true;
 }
 
 bool
@@ -298,9 +308,10 @@ KtxInput::load_face_data(int subimage, int face, int miplevel)
 void
 KtxInput::load_format_descriptor()
 {
-    ktx_uint32_t glFormat         = 0;
-    ktx_uint32_t glInternalFormat = 0;
     if (m_tex->classId == ktxTexture1_c) {
+        ktx_uint32_t glFormat         = 0;
+        ktx_uint32_t glInternalFormat = 0;
+
         ktxTexture1* ktx1 = (ktxTexture1*)m_tex;
         glFormat          = ktx1->glFormat;
 
@@ -310,13 +321,13 @@ KtxInput::load_format_descriptor()
 
         glInternalFormat = ktx1->glInternalformat;
 
+        m_format = get_format_descriptor(glFormat, glInternalFormat);
+
     } else if (m_tex->classId == ktxTexture2_c) {
         ktxTexture2* ktx2 = (ktxTexture2*)m_tex;
 
-        // TODO: Ktx2
+        m_format = get_vk_format_descriptor(ktx2->vkFormat);
     }
-
-    m_format = get_format_descriptor(glFormat, glInternalFormat);
 }
 
 }  // namespace ktx

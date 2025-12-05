@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <ktx.h>
 #include <OpenImageIO/typedesc.h>
+#include <ktx.h>
 
 OIIO_NAMESPACE_BEGIN
 namespace ktx {
@@ -15,12 +15,12 @@ enum class glColorspace { Linear = 0, sRGB };
 struct glDataDescriptor {
     bool compressed = false;
 
-    int channels_count;
+    int channels_count = 0;
 
-    glColorspace colorspace;
+    glColorspace colorspace = glColorspace::Linear;
 
     ///< Data format of the channels.
-    TypeDesc::BASETYPE type;
+    TypeDesc::BASETYPE type = TypeDesc::BASETYPE::UNKNOWN;
 
     ///< The names of each channel, in order. Typically this will be "R",
     ///< "G", "B", "A" (alpha), "Z" (depth), or other arbitrary names.
@@ -34,8 +34,21 @@ struct glDataDescriptor {
 int
 get_format_channels(ktx_uint32_t glFormat);
 
+/// @param glFormat
+///		glFormat or glBaseInternalFormat of Khronos texture
+/// @param glInternalFormat
+///		glInternalFormat of Khronos Texture
+/// @return
+///		Info about requested formats
 glDataDescriptor
 get_format_descriptor(ktx_uint32_t glFormat, ktx_uint32_t glInternalFormat);
+
+/// @param VkFormat
+///		vkFormat of Khronos V2 texture
+/// @return
+///		Info about requested format
+glDataDescriptor
+get_vk_format_descriptor(ktx_uint32_t vkFormat);
 
 }  // namespace ktx
 OIIO_NAMESPACE_END

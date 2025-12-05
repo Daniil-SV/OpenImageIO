@@ -3,7 +3,8 @@
 // https://github.com/AcademySoftwareFoundation/OpenImageIO
 
 #include "format.h"
-#include "gl/gl_format.h"
+#include "oiio_gl/gl_format.h"
+#include "oiio_gl/vk2gl.h"
 
 OIIO_NAMESPACE_BEGIN
 namespace ktx {
@@ -47,6 +48,7 @@ get_format_channels(ktx_uint32_t glFormat)
 
     return 0;
 }
+
 glDataDescriptor
 get_format_descriptor(ktx_uint32_t glFormat, ktx_uint32_t glInternalFormat)
 {
@@ -94,5 +96,16 @@ get_format_descriptor(ktx_uint32_t glFormat, ktx_uint32_t glInternalFormat)
 
     return format;
 }
+
+glDataDescriptor
+get_vk_format_descriptor(ktx_uint32_t vkFormat)
+{
+    ktx_uint32_t glFormat         = vkFormat2glFormat((VkFormat)vkFormat);
+    ktx_uint32_t glInternalFormat = vkFormat2glInternalFormat(
+        (VkFormat)vkFormat);
+
+    return get_format_descriptor(glFormat, glInternalFormat);
+}
+
 }  // namespace ktx
 OIIO_NAMESPACE_END
