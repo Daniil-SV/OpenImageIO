@@ -244,7 +244,6 @@ KtxInput::seek_subimage(int subimage, int face, int miplevel)
         char* key               = nullptr;
         void* value             = nullptr;
 
-
         status = ktxHashListEntry_GetKey(kvEntry, &keyLen, &key);
         if (status != KTX_SUCCESS)
             continue;
@@ -270,12 +269,49 @@ KtxInput::seek_subimage(int subimage, int face, int miplevel)
             //m_spec.attribute("oiio:LoopCount", anim->loopCount);
 
         } else {
-            // Store in buffer in others cases 
+            // Store in buffer in others cases
             // since we can't say for sure is it string or something other
             span<char> buf = span<char>((char*)value, (char*)value + valueLen);
             m_spec.extra_attribs.attribute(name, TypeDesc::CHAR, valueLen, buf);
         }
     }
+
+    int orientation = 0;
+    // We need to invert the axes because the orientation in oiio 
+    // works a bit differently than in KTX
+    // Also, in ktx there is also an orientation for 3D texture, z-axis,
+    // but I'm not sure if it's worth doing anything with it, so we'll just ignore it for now
+    {
+        ktxOrientationX X = (m_tex->orientation.x == KTX_ORIENT_X_LEFT)
+                                ? KTX_ORIENT_X_RIGHT
+                                : KTX_ORIENT_X_LEFT;
+
+        ktxOrientationY Y = (m_tex->orientation.y == KTX_ORIENT_Y_UP)
+                                ? KTX_ORIENT_Y_DOWN
+                                : KTX_ORIENT_Y_UP;
+
+        if (X == KTX_ORIENT_X_LEFT && Y == KTX_ORIENT_Y_UP) {
+            orientation = 1;
+        } else if (X == KTX_ORIENT_X_RIGHT && Y == KTX_ORIENT_Y_UP) {
+            orientation = 2;
+        } else if (X == KTX_ORIENT_X_RIGHT && Y == KTX_ORIENT_Y_DOWN) {
+            orientation = 3;
+        } else if (X == KTX_ORIENT_X_LEFT && Y == KTX_ORIENT_Y_DOWN) {
+            orientation = 4;
+        } else if (Y == KTX_ORIENT_Y_UP && X == KTX_ORIENT_X_LEFT) {
+            orientation = 5;
+        } else if (Y == KTX_ORIENT_Y_UP && X == KTX_ORIENT_X_RIGHT) {
+            orientation = 6;
+        } else if (Y == KTX_ORIENT_Y_DOWN && X == KTX_ORIENT_X_LEFT) {
+            orientation = 8;
+        } else if (Y == KTX_ORIENT_Y_DOWN && X == KTX_ORIENT_X_RIGHT) {
+            orientation = 7;
+        } else {
+            orientation = 0;
+        }
+    }
+
+    m_spec.attribute("Orientation", orientation);
 
     // Setup default channel names if the format does not explicitly set them
     if (m_format.channel_order.empty())
