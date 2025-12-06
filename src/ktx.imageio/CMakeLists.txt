@@ -3,7 +3,7 @@
 # https://github.com/AcademySoftwareFoundation/OpenImageIO
 
 if (KTX_FOUND)
-    add_oiio_plugin (ktxinput.cpp stream.cpp
+    add_oiio_plugin (ktxinput.cpp stream.cpp format.cpp
                      LINK_LIBRARIES KTX::ktx
                      DEFINITIONS "USE_KTX=1")
 else ()

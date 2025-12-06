@@ -171,6 +171,12 @@ KtxInput::seek_subimage(int subimage, int miplevel)
     return seek_subimage(subimage, 0, miplevel);
 }
 
+struct ktxAnimData {
+    uint32_t duration;
+    uint32_t timescale;
+    uint32_t loopCount;
+};
+
 bool
 KtxInput::seek_subimage(int subimage, int face, int miplevel)
 {
@@ -228,6 +234,47 @@ KtxInput::seek_subimage(int subimage, int face, int miplevel)
         m_spec.set_colorspace("srgb_rec709_scene");
     } else {
         m_spec.set_colorspace("lin_rec709_scene");
+    }
+
+    ktxHashListEntry* kvEntry = m_tex->kvDataHead;
+    while (kvEntry = ktxHashList_Next(kvEntry)) {
+        ktx_error_code_e status = KTX_SUCCESS;
+        unsigned int keyLen     = 0;
+        unsigned int valueLen   = 0;
+        char* key               = nullptr;
+        void* value             = nullptr;
+
+
+        status = ktxHashListEntry_GetKey(kvEntry, &keyLen, &key);
+        if (status != KTX_SUCCESS)
+            continue;
+
+        status = ktxHashListEntry_GetValue(kvEntry, &valueLen, &value);
+        if (status != KTX_SUCCESS)
+            continue;
+
+        auto name = std::string(key, key + keyLen);
+        // Store the most basic keys as strings
+        if (name == "KTXwriter" || name == "KTXwriterScParams"
+            || "KTXastcDecodeMode") {
+            std::string str = std::string((char*)value,
+                                          (char*)value + valueLen);
+            m_spec.extra_attribs.attribute(name, TypeDesc::STRING, str);
+        } else if (name == "KTXanimData") {
+            // TODO: need testing
+            //ktxAnimData* anim = (ktxAnimData*)value;
+            //m_spec.attribute("oiio:Movie", 1);
+            //
+            //int fps[2] = { anim->timescale, anim->duration };
+            //m_spec.attribute("FramesPerSecond", TypeRational, &fps);
+            //m_spec.attribute("oiio:LoopCount", anim->loopCount);
+
+        } else {
+            // Store in buffer in others cases 
+            // since we can't say for sure is it string or something other
+            span<char> buf = span<char>((char*)value, (char*)value + valueLen);
+            m_spec.extra_attribs.attribute(name, TypeDesc::CHAR, valueLen, buf);
+        }
     }
 
     // Setup default channel names if the format does not explicitly set them
