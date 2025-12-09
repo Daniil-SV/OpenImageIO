@@ -370,6 +370,9 @@ macro (oiio_add_all_tests)
                     IMAGEDIR oiio-images/webp)
     oiio_add_tests (zfile ENABLEVAR ENABLE_ZFILE
                     IMAGEDIR oiio-images)
+    oiio_add_tests (ktx
+                    FOUNDVAR KTX_FOUND ENABLEVAR ENABLE_KTX
+                    IMAGEDIR oiio-images/ktx)
 
     if (SPI_TESTS)
         oiio_add_tests (oiiotool-spi
