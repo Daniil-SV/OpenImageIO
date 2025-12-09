@@ -12,12 +12,19 @@ namespace ktx {
 
 enum class glColorspace { Linear = 0, sRGB };
 
+enum class Compression {
+    None = 0
+};
+
 struct glDataDescriptor {
-    bool compressed = false;
+    ///< The name of pixel data compression
+    Compression compression = Compression::None;
 
-    int channels_count = 0;
-
+    ///< Color space that the format has. Basically just Linear or sRGB.
     glColorspace colorspace = glColorspace::Linear;
+
+    ///< The number of color channels that the format has.
+    int channels_count = 0;
 
     ///< Data format of the channels.
     TypeDesc::BASETYPE type = TypeDesc::BASETYPE::UNKNOWN;

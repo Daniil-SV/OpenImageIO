@@ -51,31 +51,23 @@ private:
     bool load_face_data(int subimage, int face, int miplevel);
     void load_format_descriptor();
 
+    bool is_associated_alpha();
+
 private:
-    ktxTexture* m_tex = nullptr;
+    ktxTexture* m_tex = nullptr;    ///< Texture reader
+    glDataDescriptor m_format;      ///< Info about data format
+    std::vector<uint8_t> m_buffer;  ///< Source texture data buffer
+    int m_subimage = -1;            ///< Current array (layer) image index
+    int m_face     = -1;            ///< Current face (tile) index for cubemap
+    int m_miplevel = -1;            ///< Current level
+    bool m_keep_unassociated_alpha
+        = false;                     ///< Do not convert unassociated alpha
+    bool m_associated_alpha = true;  ///< Is data has associated alpha
 
-    // Whole ktx texture data buffer
-    std::vector<uint8_t> m_buffer;
-
-    // Vector with current uncompressed face data
-    // Used in cases when data is compressed
-    std::vector<uint8_t> m_uncompressed_buffer;
-
-    // Pointer to current mip map level of current subimage
-    // to read scanlines or tiles from
-    uint8_t* m_data = nullptr;
-
-    // Current array (layer) image index
-    int m_subimage = -1;
-
-    // Current face (tile) index for cubemap
-    int m_face = -1;
-
-    // Current level
-    int m_miplevel = -1;
-
-    // Info about data format
-    glDataDescriptor m_format;
+    std::vector<uint8_t>
+        m_temp_buffer;  ///< Temp buffer with current uncompressed face data
+    uint8_t* m_data
+        = nullptr;  ///< Pointer to current mip map level of current subimage
 };
 
 static bool
@@ -149,6 +141,13 @@ bool
 KtxInput::open(const std::string& name, ImageSpec& spec,
                const ImageSpec& config)
 {
+    if (config.get_int_attribute("oiio:UnassociatedAlpha", 0) == 1)
+        m_keep_unassociated_alpha = true;
+
+    m_associated_alpha
+        = config.get_int_attribute("ktx:associated",
+                                   OIIO::get_int_attribute("ktx:associated"));
+
     ioproxy_retrieve_from_config(config);
     return open(name, spec);
 }
@@ -259,7 +258,7 @@ KtxInput::seek_subimage(int subimage, int face, int miplevel)
             std::string str = std::string((char*)value,
                                           (char*)value + valueLen);
             m_spec.extra_attribs.attribute(name, TypeDesc::STRING, str);
-        } 
+        }
         // Optional Uint8 keys
         else if (name == "KTXcubemapIncomplete") {
             m_spec.extra_attribs.attribute(name, TypeDesc::UINT8, value);
@@ -281,7 +280,7 @@ KtxInput::seek_subimage(int subimage, int face, int miplevel)
     }
 
     int orientation = 0;
-    // We need to invert the axes because the orientation in oiio 
+    // We need to invert the axes because the orientation in oiio
     // works a bit differently than in KTX
     // Also, in ktx there is also an orientation for 3D texture, z-axis,
     // but I'm not sure if it's worth doing anything with it, so we'll just ignore it for now
@@ -384,9 +383,23 @@ KtxInput::load_face_data(int subimage, int face, int miplevel)
         return false;
 
     m_data = m_buffer.data() + offset;
-    if (m_format.compressed) {
+    if (m_format.compression != Compression::None) {
         return false;
         // TODO: Implement decompress
+    }
+
+    // Processing straight alpha
+    if (!m_keep_unassociated_alpha && !is_associated_alpha()) {
+        ImageBuf source_buffer(m_spec, span<std::byte>((std::byte*)m_data,
+                                                       m_spec.image_bytes()));
+
+        m_temp_buffer.resize(m_spec.image_bytes());
+        ImageBuf destination_buffer(
+            m_spec, span<std::byte>((std::byte*)m_temp_buffer.data(),
+                                    m_spec.image_bytes()));
+
+        ImageBufAlgo::premult(destination_buffer, source_buffer);
+        m_data = m_temp_buffer.data();
     }
 
     return true;
@@ -415,6 +428,18 @@ KtxInput::load_format_descriptor()
 
         m_format = get_vk_format_descriptor(ktx2->vkFormat);
     }
+}
+
+bool
+KtxInput::is_associated_alpha()
+{
+    if (m_tex->classId == ktxTexture1_c) {
+        return m_associated_alpha;
+    } else if (m_tex->classId == ktxTexture2_c) {
+        return ktxTexture2_GetPremultipliedAlpha((ktxTexture2*)m_tex);
+    }
+
+    return true;
 }
 
 }  // namespace ktx

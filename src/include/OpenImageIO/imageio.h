@@ -3843,6 +3843,19 @@ OIIO_API std::string geterror(bool clear = true);
 ///    For more information, please see OpenImageIO's documentation on the
 ///    built-in PNG format support.
 ///
+/// - `int ktx:associated` (1)
+///
+///    Indicates whether a KTX v1 file should be treated as having
+///    associated alpha, because KTX v1 does not
+///    explicitly store this in its metadata.
+///
+///    When nonzero, the loader assumes that the stored pixel data
+///    is already premultiplied by alpha. Otherwise, the loader may
+///    perform any required conversion and premultiply the alpha channel
+///    automatically if the data format or requested attributes require it
+///
+///    This option is ignored for KTX v2 files, since the premultiplication
+///    state is explicitly defined in their DFD metadata.
 /// - `int limits:channels` (1024)
 ///
 ///    When nonzero, the maximum number of color channels in an image. Image
