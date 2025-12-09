@@ -253,12 +253,16 @@ KtxInput::seek_subimage(int subimage, int face, int miplevel)
             continue;
 
         auto name = std::string(key, key + keyLen);
-        // Store the most basic keys as strings
+        // Optional String keys
         if (name == "KTXwriter" || name == "KTXwriterScParams"
             || "KTXastcDecodeMode") {
             std::string str = std::string((char*)value,
                                           (char*)value + valueLen);
             m_spec.extra_attribs.attribute(name, TypeDesc::STRING, str);
+        } 
+        // Optional Uint8 keys
+        else if (name == "KTXcubemapIncomplete") {
+            m_spec.extra_attribs.attribute(name, TypeDesc::UINT8, value);
         } else if (name == "KTXanimData") {
             // TODO: need testing
             //ktxAnimData* anim = (ktxAnimData*)value;

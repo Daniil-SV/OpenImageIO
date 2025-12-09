@@ -49,50 +49,102 @@ get_format_channels(ktx_uint32_t glFormat)
     return 0;
 }
 
+glColorspace
+get_format_colorspace(ktx_uint32_t glInternalFormat)
+{
+    switch (glInternalFormat) {
+    case GL_SR8:
+    case GL_SRG8:
+    case GL_SRGB8:
+    case GL_SRGB8_ALPHA8: return glColorspace::sRGB;
+    default: return glColorspace::Linear;
+    }
+}
+
+TypeDesc::BASETYPE
+get_format_datatype(ktx_uint32_t glInternalFormat)
+{
+    using Type = TypeDesc::BASETYPE;
+    switch (glInternalFormat) {
+    case GL_R8:
+    case GL_RG8:
+    case GL_RGB8:
+    case GL_RGBA8:
+
+    case GL_R8UI:
+    case GL_RG8UI:
+    case GL_RGB8UI:
+    case GL_RGBA8UI:
+
+    case GL_SR8:
+    case GL_SRG8:
+    case GL_SRGB8:
+    case GL_SRGB8_ALPHA8: return Type::UINT8;
+
+    case GL_R8_SNORM:
+    case GL_RG8_SNORM:
+    case GL_RGB8_SNORM:
+    case GL_RGBA8_SNORM:
+
+    case GL_R8I:
+    case GL_RG8I:
+    case GL_RGB8I:
+    case GL_RGBA8I: return Type::INT8;
+
+    case GL_R16:
+    case GL_RG16:
+    case GL_RGB16:
+    case GL_RGBA16:
+
+    case GL_R16UI:
+    case GL_RG16UI:
+    case GL_RGB16UI:
+    case GL_RGBA16UI: return Type::UINT16;
+
+    case GL_R16_SNORM:
+    case GL_RG16_SNORM:
+    case GL_RGB16_SNORM:
+    case GL_RGBA16_SNORM:
+
+    case GL_R16I:
+    case GL_RG16I:
+    case GL_RGB16I:
+    case GL_RGBA16I: return Type::INT16;
+
+    case GL_R16F:
+    case GL_RG16F:
+    case GL_RGB16F:
+    case GL_RGBA16F: return Type::HALF;
+
+    case GL_R32UI:
+    case GL_RG32UI:
+    case GL_RGB32UI:
+    case GL_RGBA32UI: return Type::UINT32;
+
+    case GL_R32I:
+    case GL_RG32I:
+    case GL_RGB32I:
+    case GL_RGBA32I: return Type::INT32;
+
+    case GL_R32F:
+    case GL_RG32F:
+    case GL_RGB32F:
+    case GL_RGBA32F: return Type::FLOAT;
+
+    default: return Type::UNKNOWN;
+    }
+}
+
 glDataDescriptor
 get_format_descriptor(ktx_uint32_t glFormat, ktx_uint32_t glInternalFormat)
 {
-    using Type  = TypeDesc::BASETYPE;
     using Space = glColorspace;
 
     glDataDescriptor format {};
 
     format.channels_count = get_format_channels(glFormat);
-
-    switch (glInternalFormat) {
-    // Unsigned Byte / Linear Colorspace
-    case GL_R8:
-    case GL_R8UI:
-    case GL_RG8:
-    case GL_RG8UI:
-    case GL_RGB8:
-    case GL_RGB8UI:
-    case GL_RGBA8:
-    case GL_RGBA8UI:
-        format.type       = Type::UINT8;
-        format.colorspace = Space::Linear;
-        break;
-
-    // Signed Byte / Linear Colorspace
-    case GL_R8_SNORM:
-    case GL_RG8_SNORM:
-    case GL_RGB8_SNORM:
-    case GL_RGBA8_SNORM:
-        format.type       = Type::INT8;
-        format.colorspace = Space::Linear;
-        break;
-
-    // Unsigned Byte / sRGB Colorspace
-    case GL_SR8:
-    case GL_SRG8:
-    case GL_SRGB8:
-    case GL_SRGB8_ALPHA8:
-        format.type       = Type::UINT8;
-        format.colorspace = Space::sRGB;
-        break;
-
-    default: format.type = Type::UNKNOWN; break;
-    }
+    format.colorspace     = get_format_colorspace(glInternalFormat);
+    format.type           = get_format_datatype(glInternalFormat);
 
     return format;
 }
@@ -100,6 +152,7 @@ get_format_descriptor(ktx_uint32_t glFormat, ktx_uint32_t glInternalFormat)
 glDataDescriptor
 get_vk_format_descriptor(ktx_uint32_t vkFormat)
 {
+    // just convert it to gl type, they are mostly compatible with each other
     ktx_uint32_t glFormat         = vkFormat2glFormat((VkFormat)vkFormat);
     ktx_uint32_t glInternalFormat = vkFormat2glInternalFormat(
         (VkFormat)vkFormat);
