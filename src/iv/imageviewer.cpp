@@ -65,7 +65,7 @@ static const char *s_file_filters = ""
     "Image Files (*.bmp *.cin *.dcm *.dds *.dpx *.fits *.gif *.hdr *.ico *.iff "
     "*.jpg *.jpe *.jpeg *.jif *.jfif *.jfi *.jp2 *.j2k *.jxl *.exr *.png *.pbm *.pgm "
     "*.ppm *.psd *.ptex *.R3D *.r3d *.rla *.sgi *.rgb *.rgba *.bw *.int *.inta *.pic *.tga "
-    "*.tpic *.tif *.tiff *.tx *.env *.sm *.vsm *.vdb *.webp *.zfile);;"
+    "*.tpic *.tif *.tiff *.tx *.env *.sm *.vsm *.vdb *.webp *.zfile *.ktx *.ktx2);;"
     "BMP (*.bmp);;"
     "Cineon (*.cin);;"
     "Direct Draw Surface (*.dds);;"
@@ -93,6 +93,7 @@ static const char *s_file_filters = ""
     "TIFF (*.tif *.tiff *.tx *.env *.sm *.vsm);;"
     "Webp (*.webp);;"
     "Zfile (*.zfile);;"
+    "Khronos (*.ktx *.ktx2);;"
     "All Files (*)";
 // clang-format on
 
