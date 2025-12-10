@@ -97,7 +97,7 @@ jobs:
             setenvs: export FREETYPE_VERSION=VER-2-12-0
                             BUILD_PNG_VERSION=1.6.30
                             WebP_BUILD_VERSION=1.5.0
-            optional_deps_append: 'FFmpeg;LibRaw;Ptex;Qt6'
+            optional_deps_append: 'FFmpeg;LibRaw;Ptex;Qt6;Ktx'
           - desc: VP2022 clang13/C++17 py39 avx2 exr3.1 ocio2.3
             nametag: linux-vfx2022.clang13
             runner: ubuntu-latest
@@ -114,7 +114,7 @@ jobs:
             fmt_ver: 9.1.0
             setenvs: export FREETYPE_VERSION=VER-2-12-0
                             BUILD_PNG_VERSION=1.6.30
-            optional_deps_append: 'FFmpeg;LibRaw;Ptex;Qt6'
+            optional_deps_append: 'FFmpeg;LibRaw;Ptex;Qt6;Ktx'
           - desc: oldest gcc9.3/C++17 py3.9 exr3.1 ocio2.3
             # Oldest gcc and versions of the dependencies that we support.
             nametag: linux-oldest
@@ -131,6 +131,7 @@ jobs:
             setenvs: export  CMAKE_VERSION=3.18.2
                              PTEX_VERSION=v2.3.2
                              WEBP_VERSION=v1.1.0
+                             KTX_VERSION=v4.1.0
                              PUGIXML_VERSION=v1.8
                              BUILD_PNG_VERSION=1.6.0
             depcmds: sudo rm -rf /usr/local/include/OpenEXR
@@ -153,6 +154,7 @@ jobs:
             setenvs: export  CMAKE_VERSION=3.18.2
                              PTEX_VERSION=v2.3.2
                              WEBP_VERSION=v1.1.0
+                             KTX_VERSION=v4.1.0
                              PUGIXML_VERSION=v1.8
                              BUILD_PNG_VERSION=1.6.0
             depcmds: sudo rm -rf /usr/local/include/OpenEXR
@@ -177,6 +179,7 @@ jobs:
                              CMAKE_VERSION=3.18.2
                              PTEX_VERSION=v2.3.2
                              WEBP_VERSION=v1.1.0
+                             KTX_VERSION=v4.1.0
                              USE_JPEGTURBO=0
                              USE_OPENCV=0
                              FREETYPE_VERSION=VER-2-10-0
@@ -257,7 +260,7 @@ jobs:
                             DISABLE_libuhdr=1
             # For icc, use fp-model precise to eliminate needless LSB errors
             # that make test results differ from other platforms.
-            optional_deps_append: "LibRaw;Ptex;Qt6"
+            optional_deps_append: "LibRaw;Ptex;Qt6;Ktx"
           - desc: VFX2025 icx/C++17 py3.11 exr3.3 ocio2.4 qt5.15
             nametag: linux-vfx2023.icx
             runner: ubuntu-latest
@@ -273,7 +276,7 @@ jobs:
                             UHDR_CMAKE_C_COMPILER=gcc
                             UHDR_CMAKE_CXX_COMPILER=g++
             # Building libuhdr with icx results in test failures
-            optional_deps_append: "LibRaw;Ptex;openjph;Qt6"
+            optional_deps_append: "LibRaw;Ptex;openjph;Qt6;Ktx"
           - desc: VFX2024 gcc11/C++17 py3.11 exr3.2 ocio2.3
             nametag: linux-vfx2024
             runner: ubuntu-latest
@@ -466,6 +469,7 @@ jobs:
                             PTEX_VERSION=v2.4.3
                             PUGIXML_VERSION=v1.15
                             WEBP_VERSION=v1.6.0
+                            KTX_VERSION=v4.4.2
                             FREETYPE_VERSION=VER-2-14-0
                             USE_OPENVDB=0
             # Ensure we are testing all the deps we think we are. We would
@@ -493,6 +497,7 @@ jobs:
                             PTEX_VERSION=main
                             PUGIXML_VERSION=master
                             WEBP_VERSION=main
+                            KTX_VERSION=main
                             OIIO_CMAKE_FLAGS="-DOIIO_HARDENING=2"
                             EXTRA_DEP_PACKAGES="python3.12-dev python3-numpy"
                             USE_OPENVDB=0
@@ -517,6 +522,7 @@ jobs:
                             PTEX_VERSION=v2.4.2
                             PUGIXML_VERSION=v1.14
                             WEBP_VERSION=v1.4.0
+                            KTX_VERSION=v4.3.0
           - desc: clang15 C++17 avx2 exr3.1 ocio2.3
             nametag: linux-clang15
             runner: ubuntu-22.04
@@ -548,6 +554,7 @@ jobs:
                             PTEX_VERSION=v2.4.3
                             PUGIXML_VERSION=v1.15
                             WEBP_VERSION=v1.6.0
+                            KTX_VERSION=v4.4.2
                             FREETYPE_VERSION=VER-2-14-0
                             USE_OPENVDB=0
           - desc: Linux ARM latest releases clang18 C++20 py3.12 exr3.4 ocio2.4
@@ -569,6 +576,7 @@ jobs:
                             PTEX_VERSION=v2.4.3
                             PUGIXML_VERSION=v1.15
                             WEBP_VERSION=v1.6.0
+                            KTX_VERSION=v4.4.2
                             FREETYPE_VERSION=VER-2-14-0
                             USE_OPENVDB=0
 

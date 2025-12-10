@@ -3,23 +3,24 @@
 # https://github.com/AcademySoftwareFoundation/OpenImageIO
 
 ######################################################################
-# ktx by hand!
+# Ktx by hand!
 ######################################################################
 
-set_cache (KTX_BUILD_VERSION 4.4.2 "KTX Software version for local builds")
-set (KTX_GIT_REPOSITORY "https://github.com/KhronosGroup/KTX-Software.git")
-set (KTX_GIT_TAG "v${KTX_BUILD_VERSION}")
-set_cache (KTX_BUILD_SHARED_LIBS OFF 
+set_cache (Ktx_BUILD_VERSION 4.4.2 "KTX Software version for local builds")
+set (Ktx_GIT_REPOSITORY "https://github.com/KhronosGroup/KTX-Software.git")
+set (Ktx_GIT_TAG "v${Ktx_BUILD_VERSION}")
+set_cache (Ktx_BUILD_SHARED_LIBS OFF 
            DOC "Should execute a local KTX build; if necessary, build shared libraries" ADVANCED)
 
-string (MAKE_C_IDENTIFIER ${KTX_BUILD_VERSION} KTX_VERSION_IDENT)
+string (MAKE_C_IDENTIFIER ${Ktx_BUILD_VERSION} Ktx_VERSION_IDENT)
 
-build_dependency_with_cmake(ktx
-    VERSION         ${KTX_BUILD_VERSION}
-    GIT_REPOSITORY  ${KTX_GIT_REPOSITORY}
-    GIT_TAG         ${KTX_GIT_TAG}
+build_dependency_with_cmake(Ktx
+    VERSION         ${Ktx_BUILD_VERSION}
+    GIT_REPOSITORY  ${Ktx_GIT_REPOSITORY}
+    GIT_TAG         ${Ktx_GIT_TAG}
     CMAKE_ARGS
-        -D BUILD_SHARED_LIBS=${KTX_BUILD_SHARED_LIBS}
+        -D BUILD_SHARED_LIBS=${Ktx_BUILD_SHARED_LIBS}
+        -D CMAKE_POSITION_INDEPENDENT_CODE=ON
         -D KTX_FEATURE_TESTS=OFF
         -D KTX_FEATURE_TESTS=OFF
         -D KTX_FEATURE_VK_UPLOAD=OFF
@@ -29,16 +30,14 @@ build_dependency_with_cmake(ktx
     )
 
 # Set some things up that we'll need for a subsequent find_package to work
-set (KTX_ROOT ${KTX_LOCAL_INSTALL_DIR})
-set (KTX_DIR ${KTX_LOCAL_INSTALL_DIR})
+set (Ktx_ROOT ${Ktx_LOCAL_INSTALL_DIR})
+set (Ktx_DIR ${Ktx_LOCAL_INSTALL_DIR})
 
 # Signal to caller that we need to find again at the installed location
-set (KTX_REFIND TRUE)
-set (KTX_REFIND_VERSION ${KTX_BUILD_VERSION})
-set (KTX_REFIND_ARGS CONFIG)
+find_package (Ktx ${Ktx_BUILD_VERSION} EXACT CONFIG REQUIRED)
 
-if (KTX_BUILD_SHARED_LIBS)
-    install_local_dependency_libs (ktx ktx)
+if (Ktx_BUILD_SHARED_LIBS)
+    install_local_dependency_libs (Ktx Ktx)
 else()
     add_compile_definitions(KHRONOS_STATIC)
 endif ()

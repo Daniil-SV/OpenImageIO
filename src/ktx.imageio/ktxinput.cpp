@@ -181,22 +181,22 @@ KtxInput::seek_subimage(int subimage, int face, int miplevel)
 {
     lock_guard lock(*this);
 
+    // checking for proper sub image index
+    if (subimage < 0 || static_cast<ktx_uint32_t>(subimage) >= m_tex->numLayers)
+        return false;
+
+    // checking for proper face index
+    if (face < 0 || static_cast<ktx_uint32_t>(face) >= m_tex->numFaces)
+        return false;
+
+    // checking for proper mip map level
+    if (miplevel < 0 || static_cast<ktx_uint32_t>(miplevel) >= m_tex->numLevels)
+        return false;
+
     // early out
     if (subimage == current_subimage() && face == m_face
         && miplevel == current_miplevel())
         return true;
-
-    // checking for proper sub image index
-    if (subimage >= m_tex->numLayers)
-        return false;
-
-    // checking for proper face index
-    if (face >= m_tex->numFaces)
-        return false;
-
-    // checking for proper mip map level
-    if (miplevel >= m_tex->numLevels)
-        return false;
 
     // Mip map width and height for KTX is calculated based on base dimension size value
     ktx_uint32_t w = std::max(1u, m_tex->baseWidth >> miplevel);
@@ -236,7 +236,7 @@ KtxInput::seek_subimage(int subimage, int face, int miplevel)
     }
 
     ktxHashListEntry* kvEntry = m_tex->kvDataHead;
-    while (kvEntry = ktxHashList_Next(kvEntry)) {
+    while ((kvEntry = ktxHashList_Next(kvEntry))) {
         ktx_error_code_e status = KTX_SUCCESS;
         unsigned int keyLen     = 0;
         unsigned int valueLen   = 0;

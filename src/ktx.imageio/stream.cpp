@@ -17,12 +17,12 @@ parent(ktxStream* stream)
     return nullptr;
 }
 
-void
+static void
 IoProxyStream_close(ktxStream*)
 {
 }
 
-ktx_error_code_e
+static ktx_error_code_e
 IoProxyStream_getsize(ktxStream* stream, ktx_size_t* size)
 {
     Filesystem::IOProxy* proxy = parent(stream);
@@ -34,7 +34,7 @@ IoProxyStream_getsize(ktxStream* stream, ktx_size_t* size)
     return KTX_SUCCESS;
 }
 
-ktx_error_code_e
+static ktx_error_code_e
 IoProxyStream_setpos(ktxStream* stream, ktx_off_t pos)
 {
     Filesystem::IOProxy* proxy = parent(stream);
@@ -45,7 +45,7 @@ IoProxyStream_setpos(ktxStream* stream, ktx_off_t pos)
     return proxy->seek(pos, SEEK_SET) ? KTX_SUCCESS : KTX_FILE_SEEK_ERROR;
 }
 
-ktx_error_code_e
+static ktx_error_code_e
 IoProxyStream_getpos(ktxStream* stream, ktx_off_t* pos)
 {
     Filesystem::IOProxy* proxy = parent(stream);
@@ -57,7 +57,7 @@ IoProxyStream_getpos(ktxStream* stream, ktx_off_t* pos)
     return KTX_SUCCESS;
 }
 
-ktx_error_code_e
+static ktx_error_code_e
 IoProxyStream_write(ktxStream* stream, const void* src, ktx_size_t size,
                     ktx_size_t count)
 {
@@ -77,7 +77,7 @@ IoProxyStream_write(ktxStream* stream, const void* src, ktx_size_t size,
                                                  : KTX_FILE_WRITE_ERROR;
 }
 
-ktx_error_code_e
+static ktx_error_code_e
 IoProxyStream_skip(ktxStream* stream, ktx_size_t count)
 {
     Filesystem::IOProxy* proxy = parent(stream);

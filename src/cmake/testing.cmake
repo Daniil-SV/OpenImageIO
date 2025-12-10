@@ -371,7 +371,7 @@ macro (oiio_add_all_tests)
     oiio_add_tests (zfile ENABLEVAR ENABLE_ZFILE
                     IMAGEDIR oiio-images)
     oiio_add_tests (ktx
-                    FOUNDVAR KTX_FOUND ENABLEVAR ENABLE_KTX
+                    FOUNDVAR Ktx_FOUND ENABLEVAR ENABLE_Ktx
                     IMAGEDIR oiio-images/ktx)
 
     if (SPI_TESTS)

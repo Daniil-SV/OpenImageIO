@@ -219,6 +219,10 @@ if [[ "$LIBPNG_VERSION" != "" ]] ; then
     source src/build-scripts/build_libpng.bash
 fi
 
+if [[ "$KTX_VERSION" != "" ]] ; then
+    source src/build-scripts/build_libktx.bash
+fi
+
 if [[ "$USE_ICC" != "" ]] ; then
     # We used gcc for the prior dependency builds, but use icc for OIIO itself
     echo "which icpc:" $(which icpc)
