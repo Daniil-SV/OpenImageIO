@@ -3233,3 +3233,101 @@ of the z-buffer. Zfile files use the file extension :file:`.zfile`.
      - matrix
      - Nl
 
+
+
+|
+
+.. _sec-bundledplugins-ktx:
+
+Khronos texture (KTX)
+===============================================
+
+KTX (Khronos TeXture)  is an efficient lightweight container file format for 
+reliably distributing GPU textures to diverse platforms and applications. 
+It is distinguished by the simplicity of the loader required to instantiate 
+texture objects from the file contents. The contents of a KTX file can range 
+from a simple base-level 2D texture to a cubemap array texture with mipmaps. 
+KTX files hold all the parameters needed for efficient texture loading into 3D 
+APIs such as OpenGL and Vulkan. KTX files usually use the file extension :file:`.ktx` or :file:`.ktx2` for V2 format.
+
+**Attributes**
+
+.. list-table::
+   :widths: 30 10 65
+   :header-rows: 1
+
+   * - ImageSpec Attribute
+     - Type
+     - Explanation
+   * - ``oiio:subimages``
+     - int
+     - The number of "image elements" (subimages, array elements) in the file.
+   * - ``oiio:miplevels``
+     - int
+     - The number of image mip map levels in the file.
+   * - ``oiio:ColorSpace``
+     - string
+     - Color space. KTX supports sRGB or Linear only. (see Section :ref:`sec-metadata-color`).
+   * - ``Orientation``
+     - int
+     - The orientation of image data (see Section :ref:`sec-metadata-orientation`).
+   * - ``textureformat``
+     - string
+     - ``"Plain Texture"`` for usual KTX textures, ``"Volume Texture"`` for depth or stencil textures, and
+       ``"CubeFace Environment"`` for cubemaps (when number of faces is 6).
+   * - ``ktx:version``
+     - int
+     - Version of KTX file. 1 or 2.
+   * - ``KTXwriter``
+     - string
+     - Optional key indicating the tool that created the KTX file. The value is a
+       free-form string (e.g. ``"PVRTexLib 4.2"``, ``"ktxtool"``, etc.).
+   * - ``KTXwriterScParams``
+     - string
+     - Optional key containing supercompression parameters used by the writer.
+       The format is tool-specific (e.g. options for BasisLZ).
+   * - ``KTXastcDecodeMode``
+     - string
+     - Optional key specifying how ASTC should be decoded. Can indicate modes
+       such as linear or sRGB. If omitted, the default decode mode is used.
+   * - ``KTXcubemapIncomplete``
+     - uint8
+     - Optional key for cubemaps indicating how many faces are present. The value
+       is the number of existing faces (0–6). If omitted, the cubemap is assumed
+       complete.
+   * - ``*``
+     - UCHAR[*]
+     - Ktx by specification can contain arbitrary keys with metadata. These will be loaded as a buffer that can be retrieved as needed.
+
+**Configuration settings for KTX input**
+
+When opening an KTX ImageInput with a *configuration* (see
+Section :ref:`sec-input-with-config`), the following special configuration
+attributes are supported:
+
+.. list-table::
+   :widths: 30 10 65
+   :header-rows: 1
+
+   * - Input Configuration Attribute
+     - Type
+     - Meaning
+   * - ``oiio:ioproxy``
+     - ptr
+     - Pointer to a ``Filesystem::IOProxy`` that will handle the I/O, for
+       example by reading from memory rather than the file system.
+   * - ``oiio:UnassociatedAlpha``
+     - int
+     - If nonzero, will leave alpha unassociated (versus the default of
+       premultiplying color channels by alpha if the alpha channel is
+       unassociated).
+   * - ``ktx:associated``
+     - int
+     - Global or local boolean that indicates whether a KTX v1 file should be treated as having associated alpha, because KTX v1 does not explicitly store this in its metadata. When nonzero, the loader assumes that the stored pixel data is already premultiplied by alpha. Otherwise, the loader may perform any required conversion and premultiply the alpha channel automatically if the data format or requested attributes require it. This option is ignored for KTX v2 files, since the premultiplication state is explicitly defined in their DFD metadata.
+
+**Custom I/O Overrides**
+
+KTX input supports the "custom I/O" feature via the
+special ``"oiio:ioproxy"`` attributes (see Sections
+:ref:`sec-imageoutput-ioproxy` and :ref:`sec-imageinput-ioproxy`) as well as
+the `set_ioproxy()` methods.

@@ -410,19 +410,10 @@ void
 KtxInput::load_format_descriptor()
 {
     if (m_tex->classId == ktxTexture1_c) {
-        ktx_uint32_t glFormat         = 0;
-        ktx_uint32_t glInternalFormat = 0;
-
         ktxTexture1* ktx1 = (ktxTexture1*)m_tex;
-        glFormat          = ktx1->glFormat;
 
-        // Compressed textures
-        if (glFormat == 0)
-            glFormat = ktx1->glBaseInternalformat;
-
-        glInternalFormat = ktx1->glInternalformat;
-
-        m_format = get_format_descriptor(glFormat, glInternalFormat);
+        m_format = get_format_descriptor(ktx1->glFormat,
+                                         ktx1->glInternalformat);
 
     } else if (m_tex->classId == ktxTexture2_c) {
         ktxTexture2* ktx2 = (ktxTexture2*)m_tex;
