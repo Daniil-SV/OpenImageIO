@@ -10,14 +10,13 @@
 #include "../gl_format.h"
 
 #ifndef GL_EXT_texture_sRGB_RG8
-#define GL_EXT_texture_sRGB_RG8 1
-#define GL_SRG8_EXT                       GL_SRG8
+#    define GL_EXT_texture_sRGB_RG8 1
+#    define GL_SRG8_EXT GL_SRG8
 #endif /* GL_EXT_texture_sRGB_RG8 */
 
 #ifndef GL_EXT_texture_sRGB_R8
-#define GL_EXT_texture_sRGB_R8 1
-#define GL_SR8_EXT                        GL_SR8
+#    define GL_EXT_texture_sRGB_R8 1
+#    define GL_SR8_EXT GL_SR8
 #endif /* GL_EXT_texture_sRGB_R8 */
 
-#define GL_ALPHA8_EXT                     GL_ALPHA8
-
+#define GL_ALPHA8_EXT GL_ALPHA8

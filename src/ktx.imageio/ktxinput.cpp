@@ -219,7 +219,7 @@ KtxInput::seek_subimage(int subimage, int face, int miplevel)
     // fill the imagespec
     if (m_tex->isCubemap) {
         m_spec.attribute("textureformat", "CubeFace Environment");
-    } else if (m_tex->numDimensions == 3) {
+    } else if (m_format.is_volume_texture) {
         m_spec.attribute("textureformat", "Volume Texture");
     } else {
         m_spec.attribute("textureformat", "Plain Texture");
@@ -275,7 +275,8 @@ KtxInput::seek_subimage(int subimage, int face, int miplevel)
             // Store in buffer in others cases
             // since we can't say for sure is it string or something other
             span<char> buf = span<char>((char*)value, (char*)value + valueLen);
-            m_spec.extra_attribs.attribute(name, TypeDesc::CHAR, valueLen, buf);
+            m_spec.extra_attribs.attribute(name, TypeDesc::UCHAR, valueLen,
+                                           buf);
         }
     }
 
@@ -441,7 +442,6 @@ KtxInput::is_associated_alpha()
 
     return true;
 }
-
 }  // namespace ktx
 
 OIIO_PLUGIN_EXPORTS_BEGIN

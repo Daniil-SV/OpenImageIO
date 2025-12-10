@@ -135,6 +135,13 @@ get_format_datatype(ktx_uint32_t glInternalFormat)
     }
 }
 
+bool
+get_is_volume_texture(ktx_uint32_t glFormat)
+{
+    return glFormat == GL_DEPTH_COMPONENT || glFormat == GL_STENCIL_INDEX
+           || glFormat == GL_DEPTH_STENCIL;
+}
+
 glDataDescriptor
 get_format_descriptor(ktx_uint32_t glFormat, ktx_uint32_t glInternalFormat)
 {
@@ -142,9 +149,10 @@ get_format_descriptor(ktx_uint32_t glFormat, ktx_uint32_t glInternalFormat)
 
     glDataDescriptor format {};
 
-    format.channels_count = get_format_channels(glFormat);
-    format.colorspace     = get_format_colorspace(glInternalFormat);
-    format.type           = get_format_datatype(glInternalFormat);
+    format.is_volume_texture = get_is_volume_texture(glFormat);
+    format.channels_count    = get_format_channels(glFormat);
+    format.colorspace        = get_format_colorspace(glInternalFormat);
+    format.type              = get_format_datatype(glInternalFormat);
 
     return format;
 }

@@ -12,12 +12,13 @@ namespace ktx {
 
 enum class glColorspace { Linear = 0, sRGB };
 
-enum class Compression {
-    None = 0
-};
+enum class Compression { None = 0 };
 
 struct glDataDescriptor {
-    ///< The name of pixel data compression
+    ///< Texture is depth or stencil data format
+    bool is_volume_texture = false;
+
+    ///< The name of pixel data compression.
     Compression compression = Compression::None;
 
     ///< Color space that the format has. Basically just Linear or sRGB.
