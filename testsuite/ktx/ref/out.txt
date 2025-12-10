@@ -1,0 +1,113 @@
+Reading ../oiio-images/ktx/3dtex_7_reference_u.ktx2
+../oiio-images/ktx/3dtex_7_reference_u.ktx2 :   16 x   16 x    7, 4 channel, volume uint8 ktx
+    SHA-1: B25CE648E0293F6B8C5D0433295EFDC7182AA0C6
+    channel list: R, G, B, A
+    full/display size: 16 x 16 x 1
+    full/display origin: 0, 0, 0
+    KTXwriter: "toktx v4.0.__default__ / libktx v4.0.__default__"
+    Orientation: 1 (normal)
+    textureformat: "Volume Texture"
+    ktx:version: 2
+    oiio:ColorSpace: "srgb_rec709_scene"
+    oiio:miplevels: 1
+    oiio:subimages: 1
+Reading ../oiio-images/ktx/cubemap.ktx2
+../oiio-images/ktx/cubemap.ktx2 :   16 x   96, 3 channel, uint8 ktx
+    MIP-map levels: 16x96 8x48 4x24 2x12 1x6
+    SHA-1: C586F4BA90DB97FA0957C0A805443A2A2D5DFA6E
+    channel list: R, G, B
+    full/display size: 16 x 16
+    full/display origin: 0, 0
+    tile size: 16 x 16
+    KTXwriter: "PVRTexLib v5.6.0 (24.2@6bb12318d1c4)"
+    Orientation: 1 (normal)
+    textureformat: "CubeFace Environment"
+    ktx:version: 2
+    oiio:ColorSpace: "srgb_rec709_scene"
+    oiio:miplevels: 5
+    oiio:subimages: 1
+Reading ../oiio-images/ktx/gradient.ktx
+../oiio-images/ktx/gradient.ktx :   16 x   16, 4 channel, uint8 ktx
+    SHA-1: E809CCA4B696885AC408B178636C67938083C34D
+    channel list: R, G, B, A
+    Orientation: 1 (normal)
+    textureformat: "Plain Texture"
+    ktx:version: 1
+    oiio:ColorSpace: "srgb_rec709_scene"
+    oiio:miplevels: 1
+    oiio:subimages: 1
+Reading ../oiio-images/ktx/oiio-logo-with-alpha.ktx2
+../oiio-images/ktx/oiio-logo-with-alpha.ktx2 :  135 x  135, 4 channel, uint8 ktx
+    MIP-map levels: 135x135 67x67 33x33 16x16 8x8 4x4 2x2 1x1
+    SHA-1: 8AED04DCCE8F83B068C537DC0982A42EFBE431B6
+    channel list: R, G, B, A
+    KTXwriter: "PVRTexLib v5.6.0 (24.2@6bb12318d1c4)"
+    Orientation: 1 (normal)
+    textureformat: "Plain Texture"
+    ktx:version: 2
+    oiio:ColorSpace: "lin_rec709_scene"
+    oiio:miplevels: 8
+    oiio:subimages: 1
+Reading ../oiio-images/ktx/orient-down-metadata.ktx
+../oiio-images/ktx/orient-down-metadata.ktx :  128 x  128, 3 channel, uint8 ktx
+    SHA-1: A4CC3C13825237BDF6FAAE7DEECD2270995E40AC
+    channel list: R, G, B
+    Orientation: 1 (normal)
+    textureformat: "Plain Texture"
+    ktx:version: 1
+    oiio:ColorSpace: "srgb_rec709_scene"
+    oiio:miplevels: 1
+    oiio:subimages: 1
+Reading ../oiio-images/ktx/orient-up-metadata.ktx
+../oiio-images/ktx/orient-up-metadata.ktx :  128 x  128, 3 channel, uint8 ktx
+    SHA-1: F1B4D2948FDA2950FD016FA499F0CCDE18E9B503
+    channel list: R, G, B
+    Orientation: 4 (flipped vertically)
+    textureformat: "Plain Texture"
+    ktx:version: 1
+    oiio:ColorSpace: "srgb_rec709_scene"
+    oiio:miplevels: 1
+    oiio:subimages: 1
+Reading ../oiio-images/ktx/oiio-logo-no-alpha-rgb32.ktx2
+../oiio-images/ktx/oiio-logo-no-alpha-rgb32.ktx2 :  135 x  135, 3 channel, uint ktx
+    MIP-map levels: 135x135 67x67 33x33 16x16 8x8 4x4 2x2 1x1
+    SHA-1: 933ACE34D44F8C0C4C919FA123BB107C4D8CBBCA
+    channel list: R, G, B
+    KTXwriter: "PVRTexLib v5.6.0 (24.2@6bb12318d1c4)"
+    Orientation: 1 (normal)
+    textureformat: "Plain Texture"
+    ktx:version: 2
+    oiio:ColorSpace: "lin_rec709_scene"
+    oiio:miplevels: 8
+    oiio:subimages: 1
+Reading ../oiio-images/ktx/neko-rgba16.ktx
+../oiio-images/ktx/neko-rgba16.ktx :  400 x  400, 4 channel, uint16 ktx
+    MIP-map levels: 400x400 200x200 100x100 50x50 25x25 12x12 6x6 3x3 1x1
+    SHA-1: C3AFA47306C82469CAD024D9089B83D3C47B661F
+    channel list: R, G, B, A
+    Orientation: 1 (normal)
+    textureformat: "Plain Texture"
+    ktx:version: 1
+    oiio:ColorSpace: "lin_rec709_scene"
+    oiio:miplevels: 9
+    oiio:subimages: 1
+Reading ../oiio-images/ktx/premultiplied-rgba.ktx2
+../oiio-images/ktx/premultiplied-rgba.ktx2 :  256 x  256, 4 channel, uint8 ktx
+    SHA-1: 14CF275066678CFB3BDE0150BE5F3C30A3C15DD6
+    channel list: R, G, B, A
+    Orientation: 1 (normal)
+    textureformat: "Plain Texture"
+    ktx:version: 2
+    oiio:ColorSpace: "srgb_rec709_scene"
+    oiio:miplevels: 1
+    oiio:subimages: 1
+Reading ../oiio-images/ktx/straight-rgba.ktx2
+../oiio-images/ktx/straight-rgba.ktx2 :  256 x  256, 4 channel, uint8 ktx
+    SHA-1: 90C1E591D7BE19D671A3BFDB5FE3660E8B3DE086
+    channel list: R, G, B, A
+    Orientation: 1 (normal)
+    textureformat: "Plain Texture"
+    ktx:version: 2
+    oiio:ColorSpace: "srgb_rec709_scene"
+    oiio:miplevels: 1
+    oiio:subimages: 1
