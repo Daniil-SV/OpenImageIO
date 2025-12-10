@@ -1,3 +1,4 @@
+// clang-format off
 /* -*- tab-width: 4; -*- */
 /* vi: set sw=2 ts=4 expandtab: */
 

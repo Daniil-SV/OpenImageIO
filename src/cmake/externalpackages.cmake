@@ -207,7 +207,7 @@ if (FFmpeg_FOUND OR FREETYPE_FOUND)
     endif ()
 endif()
 
-checked_find_package (Ktx VERSION_MIN 4.4.2)
+checked_find_package (ktx VERSION_MIN 4.4.2)
 
 
 # Qt -- used for iv
