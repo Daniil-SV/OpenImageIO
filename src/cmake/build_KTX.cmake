@@ -3,7 +3,7 @@
 # https://github.com/AcademySoftwareFoundation/OpenImageIO
 
 ######################################################################
-# KTX by hand!
+# Ktx by hand!
 ######################################################################
 
 set_cache (KTX_BUILD_VERSION 4.4.2 "KTX Software version for local builds")
@@ -14,7 +14,7 @@ set_cache (KTX_BUILD_SHARED_LIBS OFF
 
 string (MAKE_C_IDENTIFIER ${KTX_BUILD_VERSION} KTX_VERSION_IDENT)
 
-build_dependency_with_cmake(KTX
+build_dependency_with_cmake(Ktx
     VERSION         ${KTX_BUILD_VERSION}
     GIT_REPOSITORY  ${KTX_GIT_REPOSITORY}
     GIT_TAG         ${KTX_GIT_TAG}
@@ -38,7 +38,7 @@ set (KTX_REFIND_VERSION ${KTX_BUILD_VERSION})
 set (KTX_REFIND_ARGS CONFIG)
 
 if (KTX_BUILD_SHARED_LIBS)
-    install_local_dependency_libs (KTX KTX)
+    install_local_dependency_libs (Ktx Ktx)
 else()
     add_compile_definitions(KHRONOS_STATIC)
 endif ()
