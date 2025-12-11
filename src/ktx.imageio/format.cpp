@@ -145,8 +145,6 @@ get_is_volume_texture(ktx_uint32_t glFormat)
 glDataDescriptor
 get_format_descriptor(ktx_uint32_t glFormat, ktx_uint32_t glInternalFormat)
 {
-    using Space = glColorspace;
-
     glDataDescriptor format {};
 
     format.is_volume_texture = get_is_volume_texture(glFormat);

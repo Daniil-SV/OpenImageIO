@@ -6,7 +6,7 @@ Reading ../oiio-images/ktx/3dtex_7_reference_u.ktx2
     full/display origin: 0, 0, 0
     KTXwriter: "toktx v4.0.__default__ / libktx v4.0.__default__"
     Orientation: 1 (normal)
-    textureformat: "Volume Texture"
+    textureformat: "Plain Texture"
     ktx:version: 2
     oiio:ColorSpace: "srgb_rec709_scene"
     oiio:miplevels: 1

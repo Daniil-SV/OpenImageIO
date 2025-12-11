@@ -97,7 +97,8 @@ jobs:
             setenvs: export FREETYPE_VERSION=VER-2-12-0
                             BUILD_PNG_VERSION=1.6.30
                             WebP_BUILD_VERSION=1.5.0
-            optional_deps_append: 'FFmpeg;LibRaw;Ptex;Qt6;Ktx'
+                            KTX_VERSION=v4.1.0
+            optional_deps_append: 'FFmpeg;LibRaw;Ptex;Qt6'
           - desc: VP2022 clang13/C++17 py39 avx2 exr3.1 ocio2.3
             nametag: linux-vfx2022.clang13
             runner: ubuntu-latest
@@ -114,7 +115,7 @@ jobs:
             fmt_ver: 9.1.0
             setenvs: export FREETYPE_VERSION=VER-2-12-0
                             BUILD_PNG_VERSION=1.6.30
-            optional_deps_append: 'FFmpeg;LibRaw;Ptex;Qt6;Ktx'
+            optional_deps_append: 'FFmpeg;LibRaw;Ptex;Qt6'
           - desc: oldest gcc9.3/C++17 py3.9 exr3.1 ocio2.3
             # Oldest gcc and versions of the dependencies that we support.
             nametag: linux-oldest
@@ -257,10 +258,10 @@ jobs:
             setenvs: export USE_ICC=1 USE_OPENVDB=0 USE_OPENCV=0
                             OIIO_EXTRA_CPP_ARGS="-fp-model=precise"
                             FREETYPE_VERSION=VER-2-13-0
-                            DISABLE_libuhdr=1
+                            DISABLE_libuhdr=1 DISABLE_Ktx=1
             # For icc, use fp-model precise to eliminate needless LSB errors
             # that make test results differ from other platforms.
-            optional_deps_append: "LibRaw;Ptex;Qt6;Ktx"
+            optional_deps_append: "LibRaw;Ptex;Qt6"
           - desc: VFX2025 icx/C++17 py3.11 exr3.3 ocio2.4 qt5.15
             nametag: linux-vfx2023.icx
             runner: ubuntu-latest
@@ -275,8 +276,10 @@ jobs:
             setenvs: export USE_OPENVDB=0 USE_OPENCV=0
                             UHDR_CMAKE_C_COMPILER=gcc
                             UHDR_CMAKE_CXX_COMPILER=g++
-            # Building libuhdr with icx results in test failures
-            optional_deps_append: "LibRaw;Ptex;openjph;Qt6;Ktx"
+                            KTX_CMAKE_C_COMPILER=gcc
+                            KTX_CMAKE_CXX_COMPILER=g++
+            # Building libuhdr and ktx with icx results in test failures
+            optional_deps_append: "LibRaw;Ptex;openjph;Qt6"
           - desc: VFX2024 gcc11/C++17 py3.11 exr3.2 ocio2.3
             nametag: linux-vfx2024
             runner: ubuntu-latest
@@ -634,6 +637,7 @@ jobs:
             simd: sse4.2,avx2
             ctest_test_timeout: 1200
             setenvs: export MACOSX_DEPLOYMENT_TARGET=12.0
+                            Ktx_DEPENDENCY_BUILD_VERBOSE=1
             benchmark: 1
           - desc: MacOS-14-ARM aclang15/C++20/py3.13
             runner: macos-14

@@ -13,6 +13,8 @@ set_cache (Ktx_BUILD_SHARED_LIBS OFF
            DOC "Should execute a local KTX build; if necessary, build shared libraries" ADVANCED)
 
 string (MAKE_C_IDENTIFIER ${Ktx_BUILD_VERSION} Ktx_VERSION_IDENT)
+set_cache (KTX_CMAKE_C_COMPILER ${CMAKE_C_COMPILER} "ktx build C compiler override" ADVANCED)
+set_cache (KTX_CMAKE_CXX_COMPILER ${CMAKE_CXX_COMPILER} "ktx build C++ compiler override" ADVANCED)
 
 build_dependency_with_cmake(Ktx
     VERSION         ${Ktx_BUILD_VERSION}
@@ -27,6 +29,8 @@ build_dependency_with_cmake(Ktx
         -D KTX_FEATURE_GL_UPLOAD=OFF
         -D KTX_FEATURE_TOOLS=OFF
         -D CMAKE_INSTALL_LIBDIR=lib
+        -D CMAKE_C_COMPILER=${KTX_CMAKE_C_COMPILER}
+        -D CMAKE_CXX_COMPILER=${KTX_CMAKE_CXX_COMPILER}
     )
 
 # Set some things up that we'll need for a subsequent find_package to work
