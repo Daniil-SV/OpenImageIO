@@ -432,7 +432,7 @@ endfunction()
 
 function (oiio_setup_test_data)
     oiio_get_test_data (oiio-images
-                        REPO https://github.com/Daniil-SV/OpenImageIO-images.git
+                        REPO https://github.com/AcademySoftwareFoundation/OpenImageIO-images.git
                         BRANCH main)
     oiio_get_test_data (openexr-images
                         REPO https://github.com/AcademySoftwareFoundation/openexr-images.git

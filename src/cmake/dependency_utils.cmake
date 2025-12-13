@@ -716,15 +716,23 @@ macro (build_dependency_with_cmake pkgname)
                 ${_pkg_cmake_verbose}
             # Build args passed by caller
                 ${_pkg_CMAKE_ARGS}
-        ${_pkg_exec_quiet}
+        COMMAND_ECHO STDOUT
+        OUTPUT_VARIABLE cmake_config_result
+        ECHO_OUTPUT_VARIABLE
         )
+
+    message(STATUS "Configuration: \n${cmake_config_result}")
 
     # Build the package
     execute_process (COMMAND ${CMAKE_COMMAND}
                         --build ${${pkgname}_LOCAL_BUILD_DIR}
                         --config ${${PROJECT_NAME}_DEPENDENCY_BUILD_TYPE}
-                     ${_pkg_exec_quiet}
+                     COMMAND_ECHO STDOUT
+                     OUTPUT_VARIABLE cmake_build_result
+                     ECHO_OUTPUT_VARIABLE
                     )
+
+    message(STATUS "Build: \n${cmake_build_result}")
 
     # Install the project, unless instructed not to do so
     if (NOT _pkg_NOINSTALL)

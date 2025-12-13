@@ -31,6 +31,7 @@ build_dependency_with_cmake(Ktx
         -D CMAKE_INSTALL_LIBDIR=lib
         -D CMAKE_C_COMPILER=${KTX_CMAKE_C_COMPILER}
         -D CMAKE_CXX_COMPILER=${KTX_CMAKE_CXX_COMPILER}
+        -D CMAKE_C_FLAGS=-DZSTD_STATIC_LINKING_ONLY
     )
 
 # Set some things up that we'll need for a subsequent find_package to work
@@ -38,7 +39,9 @@ set (Ktx_ROOT ${Ktx_LOCAL_INSTALL_DIR})
 set (Ktx_DIR ${Ktx_LOCAL_INSTALL_DIR})
 
 # Signal to caller that we need to find again at the installed location
-find_package (Ktx ${Ktx_BUILD_VERSION} EXACT CONFIG REQUIRED)
+set (Ktx_REFIND TRUE)
+set (Ktx_REFIND_VERSION ${Ktx_BUILD_VERSION})
+set (Ktx_REFIND_ARGS CONFIG)
 
 if (Ktx_BUILD_SHARED_LIBS)
     install_local_dependency_libs (Ktx Ktx)
