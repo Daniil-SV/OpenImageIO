@@ -160,6 +160,9 @@ KtxInput::close()
         m_tex = nullptr;
     }
 
+    m_data = nullptr;
+    m_buffer.clear();
+    m_temp_buffer.clear();
     ioproxy_clear();
     return true;
 }
@@ -347,8 +350,9 @@ KtxInput::read_native_scanline(int subimage, int miplevel, int y, int z,
     if (!seek_subimage(subimage, miplevel))
         return false;
 
-    size_t size = spec().scanline_bytes();
-    memcpy(data, m_data + z * m_spec.height * size + y * size, size);
+    size_t size   = spec().scanline_bytes();
+    size_t offset = z * m_spec.height * size + y * size;
+    memcpy(data, m_data + offset, size);
     return true;
 }
 
@@ -368,7 +372,8 @@ KtxInput::read_native_tile(int subimage, int miplevel, int x, int y, int z,
     if (!seek_subimage(subimage, y / m_spec.tile_height, miplevel))
         return false;
 
-    memcpy(data, m_data, m_spec.tile_bytes());
+    size_t size = m_spec.tile_bytes();
+    memcpy(data, m_data, size);
     return true;
 }
 
@@ -390,7 +395,8 @@ KtxInput::load_face_data(int subimage, int face, int miplevel)
     }
 
     // Processing straight alpha
-    if (!m_keep_unassociated_alpha && !is_associated_alpha()) {
+    if (!m_keep_unassociated_alpha && !is_associated_alpha()
+        && m_spec.alpha_channel != -1) {
         ImageBuf source_buffer(m_spec, span<std::byte>((std::byte*)m_data,
                                                        m_spec.image_bytes()));
 

@@ -71,7 +71,7 @@ Reading ../oiio-images/ktx/orient-up-metadata.ktx
 Reading ../oiio-images/ktx/oiio-logo-no-alpha-rgb32.ktx2
 ../oiio-images/ktx/oiio-logo-no-alpha-rgb32.ktx2 :  135 x  135, 3 channel, uint ktx
     MIP-map levels: 135x135 67x67 33x33 16x16 8x8 4x4 2x2 1x1
-    SHA-1: 933ACE34D44F8C0C4C919FA123BB107C4D8CBBCA
+    SHA-1: CEA69D0E5FC7FFE07C9525CF4EC442560B353DBF
     channel list: R, G, B
     KTXwriter: "PVRTexLib v5.6.0 (24.2@6bb12318d1c4)"
     Orientation: 1 (normal)
