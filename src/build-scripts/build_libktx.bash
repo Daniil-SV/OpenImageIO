@@ -10,8 +10,9 @@
 set -ex
 
 # Repo and branch/tag/commit of ktx to download if we don't have it yet
-KTX_REPO=${KTX_REPO:=https://github.com/KhronosGroup/KTX-Software.git}
-KTX_VERSION=${KTX_VERSION:=v4.4.2}
+KTX_REPO=${KTX_REPO:=https://github.com/Daniil-SV/KTX-Software.git}
+#KTX_VERSION=${KTX_VERSION:=v4.4.2}
+KTX_VERSION=${KTX_VERSION:=dependency-rework}
 
 # Where to put ktx repo source (default to the ext area)
 KTX_SRC_DIR=${KTX_SOURCE_DIR:=${LOCAL_DEPS_DIR}/ktx}

@@ -103,7 +103,8 @@ else
             dcmtk libopenvdb-dev \
             libfreetype6-dev \
             libopencolorio-dev \
-            libtbb-dev || true
+            libtbb-dev \
+            libzstd-dev  || true
     fi
     if [[ "${USE_OPENCV}" != "0" ]] && [[ "${INSTALL_OPENCV}" != "0" ]] ; then
         sudo apt-get -q install -y --fix-missing libopencv-dev || true

@@ -5,10 +5,11 @@
 ######################################################################
 # Ktx by hand!
 ######################################################################
-
-set_cache (Ktx_BUILD_VERSION 4.4.2 "KTX Software version for local builds")
-set (Ktx_GIT_REPOSITORY "https://github.com/KhronosGroup/KTX-Software.git")
-set (Ktx_GIT_TAG "v${Ktx_BUILD_VERSION}")
+set(KTX_VERSION 0.0.0)
+set_cache (Ktx_BUILD_VERSION ${KTX_VERSION} "KTX Software version for local builds")
+set (Ktx_GIT_REPOSITORY "https://github.com/Daniil-SV/KTX-Software.git")
+#set (Ktx_GIT_TAG "v${KTX_VERSION}")
+set (Ktx_GIT_TAG "dependency-rework")
 set_cache (Ktx_BUILD_SHARED_LIBS OFF 
            DOC "Should execute a local KTX build; if necessary, build shared libraries" ADVANCED)
 
@@ -28,10 +29,11 @@ build_dependency_with_cmake(Ktx
         -D KTX_FEATURE_VK_UPLOAD=OFF
         -D KTX_FEATURE_GL_UPLOAD=OFF
         -D KTX_FEATURE_TOOLS=OFF
+        #-D LIBKTX_VERSION_READ_ONLY=OFF
         -D CMAKE_INSTALL_LIBDIR=lib
         -D CMAKE_C_COMPILER=${KTX_CMAKE_C_COMPILER}
         -D CMAKE_CXX_COMPILER=${KTX_CMAKE_CXX_COMPILER}
-        -D CMAKE_C_FLAGS=-DZSTD_STATIC_LINKING_ONLY
+        -DCMAKE_PREFIX_PATH=${${PROJECT_NAME}_LOCAL_DEPS_ROOT}/dist
     )
 
 # Set some things up that we'll need for a subsequent find_package to work

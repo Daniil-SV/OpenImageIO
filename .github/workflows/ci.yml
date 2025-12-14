@@ -115,6 +115,7 @@ jobs:
             fmt_ver: 9.1.0
             setenvs: export FREETYPE_VERSION=VER-2-12-0
                             BUILD_PNG_VERSION=1.6.30
+                            KTX_VERSION=v4.1.0
             optional_deps_append: 'FFmpeg;LibRaw;Ptex;Qt6'
           - desc: oldest gcc9.3/C++17 py3.9 exr3.1 ocio2.3
             # Oldest gcc and versions of the dependencies that we support.
